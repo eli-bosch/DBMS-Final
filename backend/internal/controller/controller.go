@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/eli-bosch/DBMS-final/config"
 	"github.com/eli-bosch/DBMS-final/internal/models"
@@ -18,7 +19,7 @@ func CreateStudent(w http.ResponseWriter, r *http.Request) {
 	db := config.GetDB() //Creates DB entry
 	result := db.Exec(`
 	INSERT INTO students (wants_ac, wants_dining, wants_kitchen, wants_private_bath)
-	VALUES (?, ?, ?, ?, ?)
+	VALUES (?, ?, ?, ?)
 	`, student.WantsAC, student.WantsDining, student.WantsKitchen, student.WantPrivateBathroom)
 
 	if result.Error != nil {
@@ -27,9 +28,11 @@ func CreateStudent(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var id uint
-	db.Raw("SELECT LAST_INSERT_ID()").Scan(&id)
-	student.StudentID = id
+	var id struct {
+		ID uint
+	}
+	db.Raw("SELECT LAST_INSERT_ID() AS id").Scan(&id)
+	student.StudentID = id.ID
 
 	res, err := json.Marshal(student)
 	if err != nil {
@@ -77,12 +80,12 @@ func FindAssignmentsByBuilding(w http.ResponseWriter, r *http.Request) {
 
 	db := config.GetDB()
 	err := db.Raw(`
-	SELECT a.student_id, a.room_number, a.building_id, s.name AS student_name
+	SELECT a.student_id, a.room_number, a.building_id
 	FROM assignments a
 	JOIN students s ON a.student_id = s.student_id
-	JOIN building b ON a.building_id = b.building_id
+	JOIN buildings b ON a.building_id = b.building_id
 	WHERE b.building_name = ?
-	ORDER BY s.name ASC`, name).Scan(&assignments).Error
+	ORDER BY b.building_name ASC`, name).Scan(&assignments).Error
 
 	if err != nil {
 		fmt.Printf("Error querying assignments: %v\n", err)
@@ -111,8 +114,8 @@ func FindRoomsByBuilding(w http.ResponseWriter, r *http.Request) {
 	err := db.Raw(`
 	SELECT r.*
 	FROM rooms r
-	JOIN buildings b ON r.buildin_id = b.building_id
-	WHERE b.name = ?`, name).Scan(&rooms).Error
+	JOIN buildings b ON r.building_id = b.building_id
+	WHERE b.building_name = ?`, name).Scan(&rooms).Error
 
 	if err != nil {
 		fmt.Printf("Error finding rooms: %v", err)
@@ -135,20 +138,26 @@ func FindRoomsByBuilding(w http.ResponseWriter, r *http.Request) {
 func FindAllRoomsByPreference(w http.ResponseWriter, r *http.Request) {
 	var rooms []models.Room
 	vars := mux.Vars(r)
-	name := vars["student_name"]
+	id := vars["student_id"]
+	ID, err := strconv.ParseUint(id, 0, 0)
+	if err != nil {
+		fmt.Printf("Error parsing student ID: %v", err)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
 
 	db := config.GetDB()
-	err := db.Raw(`
+	err = db.Raw(`
 	SELECT r.*
 	FROM students s
 	JOIN rooms r ON 1=1
 	JOIN buildings b ON r.building_id = b.building_id
-	WHERE s.name = ?
+	WHERE s.student_id = ?
 		AND (s.wants_ac = false OR b.has_ac = true)
-		AND (s.wants_kitchen = false OR b.has_kitchen = true)
-		AND (s.wants_private_bathroom = false OR r.private_bathroom > 0)
-		AnD (s.wants_dining = false OR b.has_dining = true)
-	`, name).Scan(&rooms).Error
+		AND (s.wants_kitchen = false OR r.has_kitchen = true)
+		AND (s.wants_private_bath = false OR r.private_bathrooms > 0)
+		AND (s.wants_dining = false OR b.has_dining = true)
+	`, ID).Scan(&rooms).Error
 
 	if err != nil {
 		fmt.Printf("Error finding rooms: %v", err)
@@ -171,20 +180,26 @@ func FindAllRoomsByPreference(w http.ResponseWriter, r *http.Request) {
 func FindRoomateByPreference(w http.ResponseWriter, r *http.Request) {
 	var roomates []models.Student
 	vars := mux.Vars(r)
-	name := vars["student_name"]
+	id := vars["student_id"]
+	ID, err := strconv.ParseUint(id, 0, 0)
+	if err != nil {
+		fmt.Printf("Error parsing student ID: %v", err)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
 
 	db := config.GetDB()
-	err := db.Raw(`
+	err = db.Raw(`
 	SELECT s2.*
 	FROM students s1
 	JOIN students s2 ON
-		s1.name = ?
-		AND s1.students_id != s2.student_id
-		AND s1.wants_ac = s2.wants_acnil
+		s1.student_id = ?
+		AND s1.student_id != s2.student_id
+		AND s1.wants_ac = s2.wants_ac
 		AND s1.wants_dining = s2.wants_dining
 		AND s1.wants_kitchen = s2.wants_kitchen
 		AND s1.wants_private_bath = s2.wants_private_bath
-	`, name).Scan(&roomates).Error
+	`, ID).Scan(&roomates).Error
 
 	if err != nil {
 		fmt.Printf("Error fetching roomates: %v", err)
@@ -206,10 +221,10 @@ func FindRoomateByPreference(w http.ResponseWriter, r *http.Request) {
 
 func ViewRoomReport(w http.ResponseWriter, r *http.Request) {
 	type Report struct {
-		BuildingName     string `json:"building_name"`
-		TotalRooms       *int   `json:"total_rooms"`
-		TotalBedrooms    *int   `json:"rooms_with_availability"`
-		AvaiableBedrooms int    `json:"available_bedrooms"`
+		BuildingName     string   `json:"building_name"`
+		TotalRooms       *int     `json:"total_rooms"`
+		TotalBedrooms    *float64 `json:"rooms_with_availability"`
+		AvaiableBedrooms int      `json:"available_bedrooms"`
 	}
 
 	var report []Report
@@ -220,13 +235,13 @@ func ViewRoomReport(w http.ResponseWriter, r *http.Request) {
     SELECT
         r.building_id,
         r.room_number,
-        b.name AS building_name,
+        b.building_name AS building_name,
         r.num_bedroom,
         COUNT(a.student_id) AS assigned_count
     FROM rooms r
     JOIN buildings b ON r.building_id = b.building_id
     LEFT JOIN assignments a ON r.building_id = a.building_id AND r.room_number = a.room_number
-    GROUP BY r.building_id, r.room_number, b.name, r.num_bedroom
+    GROUP BY r.building_id, r.room_number, b.building_name, r.num_bedroom
 	),
 	building_summary AS (
     SELECT

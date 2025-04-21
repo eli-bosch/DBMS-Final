@@ -14,10 +14,12 @@ func init() {
 
 	db := config.Connect()
 
-	db.AutoMigrate(models.Assignment{})
-	db.AutoMigrate(models.Building{})
-	db.AutoMigrate(models.Room{})
-	db.AutoMigrate(models.Student{})
+	db.AutoMigrate(
+		&models.Assignment{},
+		&models.Building{},
+		&models.Room{},
+		&models.Student{},
+	)
 
 	fmt.Println("Database is connected...")
 }
