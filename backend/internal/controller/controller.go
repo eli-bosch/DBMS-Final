@@ -14,6 +14,10 @@ import (
 )
 
 func CreateStudent(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "http://my-static-site-eli.s3-website.us-east-2.amazonaws.com")
+	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
 	student := &models.Student{}
 	utils.ParseBody(r, student)
 
@@ -41,6 +45,10 @@ func CreateStudent(w http.ResponseWriter, r *http.Request) {
 }
 
 func CreateAssignment(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "http://my-static-site-eli.s3-website.us-east-2.amazonaws.com")
+	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
 	assignment := &models.Assignment{}
 	utils.ParseBody(r, assignment)
 
@@ -62,6 +70,7 @@ func CreateAssignment(w http.ResponseWriter, r *http.Request) {
 
 	// 3) fetch room
 	var room models.Room
+
 	if err := db.
 		Where("building_id = ? AND room_number = ?", assignment.BuildingID, assignment.RoomNumber).
 		First(&room).Error; err != nil {
@@ -111,6 +120,10 @@ type AssignmentView struct {
 }
 
 func FindAssignmentsByBuilding(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "http://my-static-site-eli.s3-website.us-east-2.amazonaws.com")
+	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
 	buildingName := mux.Vars(r)["building_name"]
 
 	db := config.GetDB()
@@ -150,6 +163,10 @@ type RoomView struct {
 }
 
 func FindAllRooms(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "http://my-static-site-eli.s3-website.us-east-2.amazonaws.com")
+	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
 	db := config.GetDB()
 
 	var rooms []RoomView
@@ -186,6 +203,10 @@ type RoomPrefView struct {
 }
 
 func FindAllRoomsByPreference(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "http://my-static-site-eli.s3-website.us-east-2.amazonaws.com")
+	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
 	idStr := mux.Vars(r)["student_id"]
 	studentID, err := strconv.ParseUint(idStr, 10, 64)
 	if err != nil {
@@ -236,6 +257,10 @@ type RoommateView struct {
 }
 
 func FindRoomateByPreference(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "http://my-static-site-eli.s3-website.us-east-2.amazonaws.com")
+	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
 	idStr := mux.Vars(r)["student_id"]
 	studentID, err := strconv.ParseUint(idStr, 10, 64)
 	if err != nil {
@@ -283,6 +308,10 @@ type ReportRow struct {
 }
 
 func ViewRoomReport(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "http://my-static-site-eli.s3-website.us-east-2.amazonaws.com")
+	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
 	db := config.GetDB()
 	var rows []ReportRow
 
