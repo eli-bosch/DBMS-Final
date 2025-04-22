@@ -62,6 +62,7 @@ func CreateAssignment(w http.ResponseWriter, r *http.Request) {
 
 	// 3) fetch room
 	var room models.Room
+
 	if err := db.
 		Where("building_id = ? AND room_number = ?", assignment.BuildingID, assignment.RoomNumber).
 		First(&room).Error; err != nil {
