@@ -62,7 +62,6 @@ func CreateAssignment(w http.ResponseWriter, r *http.Request) {
 
 	// 3) fetch room
 	var room models.Room
-
 	if err := db.
 		Where("building_id = ? AND room_number = ?", assignment.BuildingID, assignment.RoomNumber).
 		First(&room).Error; err != nil {
@@ -226,14 +225,14 @@ func FindAllRoomsByPreference(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(rooms)
 }
 
-// struct FindRoomateByPreference returns to frontend
+// struct FindRoomateByPreference returns to frontend (copy of student struct, named differently for clarity)
 type RoommateView struct {
-	StudentID            uint   `json:"student_id"`
-	Name                 string `json:"name"`
-	WantsAC              bool   `json:"wants_ac"`
-	WantsDining          bool   `json:"wants_dining"`
-	WantsKitchen         bool   `json:"wants_kitchen"`
-    WantsPrivateBathroom bool   `gorm:"column:wants_private_bath"` 
+    StudentID            uint   `gorm:"column:student_id"       json:"student_id"`
+    Name                 string `gorm:"column:name"             json:"name"`
+    WantsAC              bool   `gorm:"column:wants_ac"         json:"wants_ac"`
+    WantsDining          bool   `gorm:"column:wants_dining"     json:"wants_dining"`
+    WantsKitchen         bool   `gorm:"column:wants_kitchen"    json:"wants_kitchen"`
+    WantsPrivateBathroom bool   `gorm:"column:wants_private_bath" json:"wants_private_bath"`
 }
 
 func FindRoomateByPreference(w http.ResponseWriter, r *http.Request) {
