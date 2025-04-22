@@ -9,7 +9,7 @@ form.addEventListener('submit', async e => {
     if (!building) return;
 
     try {
-        const res = await fetch(`/api/assignment/${encodeURIComponent(building)}`);
+        const res = await fetch(`http://3.14.131.58/api/assignment/${encodeURIComponent(building)}`);
         if (!res.ok) {
             const errText = await res.text();
             throw new Error(errText || `Status ${res.status}`);

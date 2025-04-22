@@ -19,11 +19,7 @@ func main() {
 	r := mux.NewRouter()
 	routes.DBMSRoutes(r)
 
-	// use go run cmd/server/main.go
-	r.PathPrefix("/").Handler(http.FileServer(http.Dir("../frontend")))
-
 	http.Handle("/", r)
 	fmt.Println("Server is running...")
 	log.Fatal(http.ListenAndServe("localhost:9010", r))
-
 }

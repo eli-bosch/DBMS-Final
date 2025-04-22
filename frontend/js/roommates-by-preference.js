@@ -9,7 +9,7 @@ form.addEventListener('submit', async e => {
     if (!id) return;
 
     try {
-        const res = await fetch(`/api/student/${id}`);
+        const res = await fetch(`http://3.14.131.58/api/student/${id}`);
         if (!res.ok) {
             const msg = await res.text();
             throw new Error(msg || `Status ${res.status}`);

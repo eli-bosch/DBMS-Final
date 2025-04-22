@@ -4,7 +4,7 @@ const tbody = document.querySelector('#reportTable tbody');
 btn.addEventListener('click', async () => {
     tbody.innerHTML = '';
     try {
-        const res = await fetch('/api/building/report');
+        const res = await fetch('http://3.14.131.58/api/building/report');
         if (!res.ok) throw new Error(`Status ${res.status}`);
         const data = await res.json();
 

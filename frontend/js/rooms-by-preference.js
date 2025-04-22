@@ -9,7 +9,7 @@ form.addEventListener('submit', async e => {
     if (!id) return;
 
     try {
-        const res = await fetch(`/api/preference/${id}`);
+        const res = await fetch(`http://3.14.131.58/api/preference/${id}`);
         if (!res.ok) {
             const txt = await res.text();
             throw new Error(txt || `Status ${res.status}`);

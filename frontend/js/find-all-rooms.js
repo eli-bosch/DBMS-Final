@@ -4,7 +4,7 @@ const result = document.getElementById('result');
 btn.addEventListener('click', async () => {
     result.innerHTML = '';
     try {
-        const res = await fetch('/api/rooms');
+        const res = await fetch('http://3.14.131.58/api/rooms');
         if (!res.ok) throw new Error(`Error ${res.status}`);
         const rooms = await res.json();
         if (rooms.length === 0) {

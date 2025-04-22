@@ -13,7 +13,7 @@ form.addEventListener('submit', async e => {
     };
 
     try {
-        const res = await fetch('/api/assignment', {
+        const res = await fetch('http://3.14.131.58/api/assignment', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
