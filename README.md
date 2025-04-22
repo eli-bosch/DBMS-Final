@@ -3,18 +3,18 @@ This is Cason Parkinson's and my (Eli Bosch) submission for the DBMS final. The 
 
 ## Installation
 To run the project on your local machine, clone the repo and create a .env file based on the .env.example file. Then create a database in MySQL. Compile the main.go file.
-``bash
+```bash
 go build main.go
-``
+```
 Then execute the file
-``bash
+```bash
 ./main
-``
+```
 This migrates the database schema to your database using GORM's AutoMigrate function. Then, run the following commands during setup.sh file to fill the database with some example entries.
-``bash
+```bash
 chmod +x setup.sh
 ./setup.sh
-``
+```
 The database is now ready and filed for use by the front-end.
 
 ## Usage
