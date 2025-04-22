@@ -15,8 +15,17 @@ import (
 )
 
 func main() {
+
+	db := config.Connect()
+	defer db.Close()
+
+	populateDatabase()
+
 	r := mux.NewRouter()
 	routes.DBMSRoutes(r)
+
+	// use go run cmd/server/main.go
+	r.PathPrefix("/").Handler(http.FileServer(http.Dir("../frontend")))
 
 	http.Handle("/", r)
 	fmt.Println("Server is running...")
@@ -44,7 +53,7 @@ func populateDatabase() {
 			BuildingID:   uint(i + 1),
 			BuildingName: name,
 			HasAC:        rand.Intn(2) == 1,
-			HasDining:    rand.Intn(2) == 1,
+			HasDining:    rand.Intn(2) == 1, 
 		}
 		buildings = append(buildings, building)
 		db.Create(&building)
@@ -66,24 +75,26 @@ func populateDatabase() {
 		}
 	}
 
-	// Create 100 students with random preferences
-	var students []models.Student
-	for i := 0; i < 100; i++ {
-		student := models.Student{
-			WantsAC:             rand.Intn(2) == 1,
-			WantsDining:         rand.Intn(2) == 1,
-			WantsKitchen:        rand.Intn(2) == 1,
-			WantPrivateBathroom: rand.Intn(2) == 1,
-		}
-		db.Create(&student)
-		students = append(students, student)
-	}
+	// Seed 100 students cycling through three names:
+    names := []string{"Alice", "Bob", "Carol"}
+    var students []models.Student
+    for i := 0; i < 100; i++ {
+        student := models.Student{
+            Name:                 names[i % len(names)],
+            WantsAC:              rand.Intn(2) == 1,
+            WantsDining:          rand.Intn(2) == 1,
+            WantsKitchen:         rand.Intn(2) == 1,
+            WantsPrivateBathroom: rand.Intn(2) == 1,
+        }
+        db.Create(&student)
+        students = append(students, student)
+    }
 
 	// Assign 50 students to rooms (1 per room)
 	var assignments []models.Assignment
 	assignedCount := 0
 	for _, room := range rooms {
-		if assignedCount >= 50 {
+		if assignedCount >= 30 {
 			break
 		}
 		assignment := models.Assignment{

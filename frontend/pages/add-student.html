@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Add a Student</title>
+    <link rel="stylesheet" href="../css/add-student.css" />
+</head>
+<body>
+    <div class="container">
+        <a class="back-button" href="../index.html">← Home</a>
+        <h1>Add a Student</h1>
+        <form id="studentForm" class="form">
+            <label class="full">
+                <span>Name</span>
+                <input type="text" name="name" placeholder="Enter name" required />
+            </label>
+            <label><input type="checkbox" name="wants_ac" /> AC</label>
+            <label><input type="checkbox" name="wants_dining" /> Dining</label>
+            <label><input type="checkbox" name="wants_kitchen" /> Kitchen</label>
+            <label><input type="checkbox" name="wants_private_bath" /> Private Bath</label>
+            <button type="submit">Add Student</button>
+        </form>
+        <div id="result" class="result"></div>
+    </div>
+    <script src="../js/add-student.js"></script>
+</body>
+</html>
