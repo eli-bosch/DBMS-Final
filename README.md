@@ -15,7 +15,7 @@ This migrates the database schema to your database using GORM's AutoMigrate func
 chmod +x setup.sh
 ./setup.sh
 ```
-The database is now ready and filed for use by the front-end.
+The database is now ready and filled for use by the front-end.
 
 ## Usage
 TBD
