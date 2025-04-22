@@ -1,0 +1,117 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #74ABE2 0%, #5563DE 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.container {
+  background: rgba(255, 255, 255, 0.9);
+  padding: 2rem;
+  border-radius: 12px;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.back-button {
+  display: inline-block;
+  margin-bottom: 1rem;
+  padding: 0.5rem 1rem;
+  background: #fff;
+  color: #5563DE;
+  border: 2px solid #5563DE;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.back-button:hover {
+  background-color: #5563DE;
+  color: #fff;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.form {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.form .full {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+}
+
+.form .full span {
+  margin-bottom: 0.25rem;
+  color: #555;
+}
+
+.form .full input {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.form label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+button {
+  grid-column: 1 / -1;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 6px;
+  background-color: #5563DE;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #4050b5;
+}
+
+.result {
+  margin-top: 1rem;
+}
+
+.student-card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.student-card h2 {
+  margin-bottom: 0.5rem;
+  color: #5563DE;
+}
+
+.student-card ul {
+  list-style: none;
+}
+
+.student-card li {
+  margin: 0.25rem 0;
+}

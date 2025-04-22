@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Create Assignment</title>
+    <link rel="stylesheet" href="../css/create-assignment.css" />
+</head>
+<body>
+    <div class="container">
+        <a class="back-button" href="../index.html">← Home</a>
+        <h1>Create Assignment</h1>
+        <form id="assignmentForm" class="form">
+            <label>
+                <span>Student ID</span>
+                <input type="number" name="student_id" min="1" required />
+            </label>
+            <label>
+                <span>Building ID</span>
+                <input type="number" name="building_id" min="1" required />
+            </label>
+            <label>
+                <span>Room Number</span>
+                <input type="number" name="room_number" min="1" required />
+            </label>
+            <button type="submit">Assign</button>
+        </form>
+        <div id="result" class="result"></div>
+    </div>
+    <script src="../js/create-assignment.js"></script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Find Roommates</title>
+    <link rel="stylesheet" href="../css/roommates-by-preference.css" />
+</head>
+<body>
+    <div class="container">
+        <a class="back-button" href="../index.html">← Home</a>
+        <h1>Find Roommates</h1>
+        <form id="mateForm" class="form">
+            <label>
+                <span>Student ID</span>
+                <input type="number" name="student_id" min="1" required />
+            </label>
+            <button type="submit">Lookup</button>
+        </form>
+        <div id="result" class="result"></div>
+    </div>
+    <script src="../js/roommates-by-preference.js"></script>
+</body>
+</html>
