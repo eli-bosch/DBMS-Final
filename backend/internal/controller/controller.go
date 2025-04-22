@@ -225,16 +225,6 @@ func FindAllRoomsByPreference(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(rooms)
 }
 
-// struct FindRoomateByPreference returns to frontend (copy of student struct, named differently for clarity)
-type RoommateView struct {
-    StudentID            uint   `gorm:"column:student_id"       json:"student_id"`
-    Name                 string `gorm:"column:name"             json:"name"`
-    WantsAC              bool   `gorm:"column:wants_ac"         json:"wants_ac"`
-    WantsDining          bool   `gorm:"column:wants_dining"     json:"wants_dining"`
-    WantsKitchen         bool   `gorm:"column:wants_kitchen"    json:"wants_kitchen"`
-    WantsPrivateBathroom bool   `gorm:"column:wants_private_bath" json:"wants_private_bath"`
-}
-
 func FindRoomateByPreference(w http.ResponseWriter, r *http.Request) {
 	idStr := mux.Vars(r)["student_id"]
 	studentID, err := strconv.ParseUint(idStr, 10, 64)
@@ -262,15 +252,15 @@ func FindRoomateByPreference(w http.ResponseWriter, r *http.Request) {
     ORDER BY s2.name ASC;
     `
 
-	var mates []RoommateView
-	if err := config.GetDB().Raw(sql, studentID).Scan(&mates).Error; err != nil {
+	var roommates []models.Student
+	if err := config.GetDB().Raw(sql, studentID).Scan(&roommates).Error; err != nil {
 		log.Printf("Error fetching roommates: %v\n", err)
 		http.Error(w, "Could not fetch roommates", http.StatusInternalServerError)
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(mates)
+	json.NewEncoder(w).Encode(roommates)
 }
 
 // Send an array of these structs to the frontend from ViewRoomReport
