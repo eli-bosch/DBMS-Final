@@ -9,7 +9,7 @@ import (
 var DBMSRoutes = func(router *mux.Router) {
 	//User Routes - Add protections and logging
 	router.HandleFunc("/api/student", controller.CreateStudent).Methods("POST", "OPTIONS")                               //1) Add Student to the Student Table
-	router.HandleFunc("/api/assignment", controller.CreateAssignment).Methods("POST")                                    //2) Add Assignment
+	router.HandleFunc("/api/assignment", controller.CreateAssignment).Methods("POST", "OPTIONS")                         //2) Add Assignment
 	router.HandleFunc("/api/assignment/{building_name}", controller.FindAssignmentsByBuilding).Methods("GET", "OPTIONS") //3) Assignment in building
 	router.HandleFunc("/api/rooms", controller.FindAllRooms).Methods("GET")                                              //4) All Rooms sorted by building Id
 	router.HandleFunc("/api/preference/{student_id}", controller.FindAllRoomsByPreference).Methods("GET")                //5) View all rooms by student preference
