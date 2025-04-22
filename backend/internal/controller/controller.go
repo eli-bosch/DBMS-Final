@@ -232,7 +232,7 @@ type RoommateView struct {
 	WantsAC              bool   `json:"wants_ac"`
 	WantsDining          bool   `json:"wants_dining"`
 	WantsKitchen         bool   `json:"wants_kitchen"`
-	WantsPrivateBathroom bool   `json:"wants_private_bath"`
+    WantsPrivateBathroom bool   `gorm:"column:wants_private_bath"` 
 }
 
 func FindRoomateByPreference(w http.ResponseWriter, r *http.Request) {
