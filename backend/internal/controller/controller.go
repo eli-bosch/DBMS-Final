@@ -237,7 +237,7 @@ func ViewRoomReport(w http.ResponseWriter, r *http.Request) {
         r.room_number,
         b.building_name AS building_name,
         r.num_bedroom,
-        COUNT(a.student_id) AS assigned_count
+        COUNT(DISTINCT a.student_id) AS assigned_count
     FROM rooms r
     JOIN buildings b ON r.building_id = b.building_id
     LEFT JOIN assignments a ON r.building_id = a.building_id AND r.room_number = a.room_number
@@ -266,6 +266,7 @@ func ViewRoomReport(w http.ResponseWriter, r *http.Request) {
 	SELECT * FROM building_summary
 	UNION ALL
 	SELECT * FROM campus_summary;
+
 	`).Scan(&report).Error
 
 	if err != nil {

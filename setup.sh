@@ -1,24 +1,60 @@
 #!/bin/bash
-set -e -v
+#The author of this file was entirely ChatGPT
+# Exit if any command fails
+set -e
 
-echo "Creating and populating 'messages' table..."
+# DB credentials – change as needed
+DB_HOST="yourHost"
+DB_PORT="yourPort"
+DB_NAME="yourDB"
+DB_USER="youruser"
+DB_PASS="yourpassword"
 
-mysql -u casonp -p <<EOFMYSQL
+# Connect and run SQL commands
+echo "🚀 Seeding MySQL database '$DB_NAME' on $DB_HOST..."
 
-USE casonp;
+mysql -h "$DB_HOST" -P "$DB_PORT" -u "$DB_USER" -p"$DB_PASS" "$DB_NAME" <<EOF
 
--- Drop if exists 
-DROP TABLE IF EXISTS messages;
+-- Optional: Drop existing data
+DELETE FROM assignments;
+DELETE FROM students;
+DELETE FROM rooms;
+DELETE FROM buildings;
 
--- Create a simple table
-CREATE TABLE messages (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    content VARCHAR(255)
-) ENGINE=InnoDB;
+-- Insert buildings
+INSERT INTO buildings (building_id, building_name, has_ac, has_dining) VALUES
+(1, 'Maple Hill South', 1, 1),
+(2, 'Maple Hill East', 0, 1),
+(3, 'Maple Hill West', 1, 0),
+(4, 'Founders Hall', 1, 1),
+(5, 'Hotz Honors Hall', 1, 1);
 
--- Insert a test row
-INSERT INTO messages (content) VALUES ('Hello from the database!');
+-- Insert rooms
+$(for b in {1..5}; do
+  for r in {101..110}; do
+    bedrooms=$(( (RANDOM % 2) + 1 ))
+    priv_bath=$(( RANDOM % 2 ))
+    has_kitchen=$(( RANDOM % 2 ))
+    echo "INSERT INTO rooms (building_id, room_number, num_bedroom, private_bathrooms, has_kitchen) VALUES ($b, $r, $bedrooms, $priv_bath, $has_kitchen);"
+  done
+done)
 
-EOFMYSQL
+-- Insert students
+$(for i in {1..100}; do
+  ac=$(( RANDOM % 2 ))
+  dining=$(( RANDOM % 2 ))
+  kitchen=$(( RANDOM % 2 ))
+  priv_bath=$(( RANDOM % 2 ))
+  echo "INSERT INTO students (wants_ac, wants_dining, wants_kitchen, wants_private_bath) VALUES ($ac, $dining, $kitchen, $priv_bath);"
+done)
 
-echo "✅ messages table created and populated."
+-- Insert 50 assignments
+$(for i in {1..50}; do
+  b=$(( (RANDOM % 5) + 1 ))
+  r=$(( (RANDOM % 10) + 101 ))
+  echo "INSERT INTO assignments (student_id, building_id, room_number) VALUES ($i, $b, $r);"
+done)
+
+EOF
+
+echo "✅ Database seeded successfully!"
