@@ -1,5 +1,5 @@
 # Database Management System Final Project
-This is Cason Parkinson's and my (Eli Bosch) submission for the DBMS final project. The back-end is coded in Go, and the front-end is coded in HTML, CSS, and JS. It's a basic housing assignment service for a University.
+This is Cason Parkinson's and my (Eli Bosch) submission for the DBMS final project. The back-end is coded in Go, and the front-end is coded in HTML, CSS, and JS. It's a basic housing assignment service for a University. Its currently an active webpage that you can visit [here](http://my-static-site-eli.s3-website.us-east-2.amazonaws.com/index.html).
 
 ## Installation
 To run the project on your local machine, clone the repo and create a .env file based on the structure of the .env.example file inside the server directory. Then create a database in MySQL. Compile the main.go file.
