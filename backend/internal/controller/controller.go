@@ -18,15 +18,13 @@ func CreateStudent(w http.ResponseWriter, r *http.Request) {
 	utils.ParseBody(r, student)
 
 	db := config.GetDB()
-	// GORM’s Create will INSERT and fill student.StudentID
-	if err := db.Create(student).Error; err != nil {
+	if err := db.Create(student).Error; err != nil { //Creates student using ORM, but a simple sql insert would work
 		log.Printf("Error creating student: %v", err)
 		http.Error(w, "Could not create student", http.StatusBadRequest)
 		return
 	}
 
-	// student.StudentID is now set to the auto‑increment value
-	res, err := json.Marshal(student)
+	res, err := json.Marshal(student) //Marshalls student into a JSON
 	if err != nil {
 		log.Printf("Error marshalling student: %v", err)
 		http.Error(w, "Server error", http.StatusInternalServerError)
@@ -34,7 +32,7 @@ func CreateStudent(w http.ResponseWriter, r *http.Request) {
 	}
 
 	fmt.Println("Student added to database")
-
+	//Sends json to frontend
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write(res)
@@ -46,21 +44,18 @@ func CreateAssignment(w http.ResponseWriter, r *http.Request) {
 
 	db := config.GetDB()
 
-	// 1) fetch student
 	var student models.Student
 	if err := db.First(&student, "student_id = ?", assignment.StudentID).Error; err != nil {
 		http.Error(w, "Student not found", http.StatusBadRequest)
 		return
 	}
 
-	// 2) fetch building
 	var building models.Building
 	if err := db.First(&building, "building_id = ?", assignment.BuildingID).Error; err != nil {
 		http.Error(w, "Building not found", http.StatusBadRequest)
 		return
 	}
 
-	// 3) fetch room
 	var room models.Room
 	if err := db.
 		Where("building_id = ? AND room_number = ?", assignment.BuildingID, assignment.RoomNumber).
@@ -69,7 +64,6 @@ func CreateAssignment(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// 4) enforce preferences
 	if student.WantsAC && !building.HasAC {
 		http.Error(w, "Building does not have AC", http.StatusBadRequest)
 		return
@@ -87,7 +81,6 @@ func CreateAssignment(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// 5) create assignment
 	if err := db.Create(assignment).Error; err != nil {
 		log.Printf("Error creating assignment: %v", err)
 		http.Error(w, "Could not create assignment", http.StatusInternalServerError)
@@ -96,7 +89,6 @@ func CreateAssignment(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println("Assignment created")
 
-	// 6) return JSON
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(assignment)

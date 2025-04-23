@@ -1,4 +1,5 @@
 #!/bin/bash
+#Credit to CHATGPT for creating this file
 set -e
 
 DB_HOST="yourHost"
