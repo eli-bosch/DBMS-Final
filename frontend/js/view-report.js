@@ -6,8 +6,8 @@ btn.addEventListener('click', async () => {
     try {
         const res = await fetch('http://3.14.131.58/api/building/report');
         if (!res.ok) throw new Error(`Status ${res.status}`);
-        const data = await res.json();
-
+        let data = await res.json();
+        data = data.filter(r => r.building_id === 1);
         data.forEach(row => {
             const tr = document.createElement('tr');
             tr.innerHTML = `
