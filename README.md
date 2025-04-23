@@ -18,4 +18,7 @@ chmod +x setup.sh
 The database is now ready and filled for use by the front-end. 
 
 ## Usage
-Visit localhost:9010, and you'll see the home page with 7 options, each with a different function. Select one of the options and you'll be taken to its page.
+Once main is running, visit localhost:9010, and you'll visit the homepage to the website where you can go to the 7 subpages for different functionality.
+
+## AWS Usage
+To run the program on AWS, make sure that you have GoLang, MySQL, and Github installed on your instance. Create your database, and add your user. In main.go, change the http.listener from localhost:9010 to 0.0.0.0:80, and set up an S2 bucket utilizing the frontend folder from the repo. Change the CORS request in main.go to accept the S2 bucket. Then follow the steps in Installation. To run the backend, and fill it with example entries.
