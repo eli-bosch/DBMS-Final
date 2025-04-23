@@ -1,8 +1,8 @@
 # Database Management System Final Project
-This is Cason Parkinson's and my (Eli Bosch) submission for the DBMS final. The back-end is coded in Go, and the front-end is coded in HTML, CSS, and JS. It's a basic housing assignment service for a University.
+This is Cason Parkinson's and my (Eli Bosch) submission for the DBMS final project. The back-end is coded in Go, and the front-end is coded in HTML, CSS, and JS. It's a basic housing assignment service for a University.
 
 ## Installation
-To run the project on your local machine, clone the repo and create a .env file based on the .env.example file inside the server directory. Then create a database in MySQL. Compile the main.go file.
+To run the project on your local machine, clone the repo and create a .env file based on the structure of the .env.example file inside the server directory. Then create a database in MySQL. Compile the main.go file.
 ```bash
 go build main.go
 ```
@@ -15,7 +15,7 @@ This migrates the database schema to your database using GORM's AutoMigrate func
 chmod +x setup.sh
 ./setup.sh
 ```
-The database is now ready and filled for use by the front-end.
+The database is now ready and filled for use by the front-end. 
 
 ## Usage
-TBD
+Visit localhost:9010, and you'll see the home page with 7 options, each with a different function. Select one of the options and you'll be taken to its page.
