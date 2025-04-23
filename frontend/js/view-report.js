@@ -7,7 +7,7 @@ btn.addEventListener('click', async () => {
         const res = await fetch('http://3.14.131.58/api/building/report');
         if (!res.ok) throw new Error(`Status ${res.status}`);
         let data = await res.json();
-        data = data.filter(r => r.building_id === 1);
+        data.sort((a, b) => (a.building_id || Infinity) - (b.building_id || Infinity));
         data.forEach(row => {
             const tr = document.createElement('tr');
             tr.innerHTML = `
